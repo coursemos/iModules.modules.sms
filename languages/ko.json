@@ -21,6 +21,8 @@
         "keyword": "수신자/발신자",
         "filter": {
             "types": {
+                "SMS": "SMS",
+                "LMS": "LMS",
                 "KAKAO": "알림톡"
             },
             "status": {

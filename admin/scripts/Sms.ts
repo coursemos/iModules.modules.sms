@@ -13,6 +13,14 @@ namespace modules {
         export namespace admin {
             export class Sms extends modules.admin.admin.Component {
                 /**
+                 * 발송/수신자명을 가져온다.
+                 *
+                 */
+                getMemberName(member): string {
+                    return '<i class="photo" style="background-image:url(' + member.photo + ')"></i>' + member.name;
+                }
+
+                /**
                  * 메세지관리
                  */
                 messages = {

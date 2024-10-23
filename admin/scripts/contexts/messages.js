@@ -39,7 +39,6 @@ Admin.ready(async () => {
                 layout: 'fit',
                 border: false,
                 flex: 1,
-                selection: { selectable: true, type: 'check', multiple: false },
                 store: new Aui.Store.Remote({
                     url: me.getProcessUrl('messages'),
                     primaryKeys: ['message_id'],
@@ -60,26 +59,29 @@ Admin.ready(async () => {
                 columns: [
                     {
                         text: await me.getText('admin.columns.receiver'),
-                        dataIndex: 'name',
+                        dataIndex: 'sended_by',
                         textAlign: 'center',
-                        width: 120,
+                        width: 150,
+                        renderer: (value) => {
+                            return me.getMemberName(value);
+                        },
                     },
                     {
                         text: await me.getText('admin.columns.receiveNumber'),
                         dataIndex: 'cellphone',
                         textAlign: 'center',
-                        width: 170,
+                        width: 150,
                     },
                     {
                         text: await me.getText('admin.columns.sender'),
                         dataIndex: 'sender',
-                        width: 120,
+                        width: 150,
                     },
                     {
                         text: await me.getText('admin.columns.senderNumber'),
                         dataIndex: 'sended_cellphone',
                         textAlign: 'center',
-                        width: 170,
+                        width: 160,
                     },
                     {
                         text: await me.getText('admin.columns.content'),
