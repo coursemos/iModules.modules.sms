@@ -7,15 +7,15 @@
  * @file /modules/sms/dtos/Cellphone.php
  * @author Arzz <arzz@arzz.com>
  * @license MIT License
- * @modified 2024. 10. 21.
+ * @modified 2024. 10. 28.
  */
 namespace modules\sms\dtos;
 class Cellphone
 {
     /**
-     * @var string $_cellphone 전화번호
+     * @var \libphonenumber\PhoneNumber $_cellphone 전화번호
      */
-    private string $_cellphone;
+    private \libphonenumber\PhoneNumber $_cellphone;
 
     /**
      * @var string $_name 이름
@@ -25,12 +25,12 @@ class Cellphone
     /**
      * @var int $_member_id 회원고유값
      */
-    private ?int $_member_id;
+    private int $_member_id;
 
     /**
-     * @var string $_photo 회원사진
+     * @var \modules\member\dtos\Member $_member 회원정보
      */
-    private ?string $_photo;
+    private \modules\member\dtos\Member $_member;
 
     /**
      * 휴대전화번호 구조체를 정의한다.
@@ -38,14 +38,35 @@ class Cellphone
      * @param string $cellphone 휴대전화번호
      * @param ?string $name 이름
      * @param ?int $member_id 회원고유값
-     * @param ?string $photo 회원사진
      */
-    public function __construct(string $cellphone, ?string $name = null, ?int $member_id = null, ?string $photo = null)
+    public function __construct(string $cellphone, ?string $name = null, ?int $member_id = null)
     {
-        $this->_cellphone = $cellphone;
+        /**
+         * @var \modules\sms\Sms $mSms
+         */
+        $mSms = \Modules::get('sms');
+        $this->_cellphone = \libphonenumber\PhoneNumberUtil::getInstance()->parse(
+            $cellphone,
+            $mSms->getConfigs('country') ?? 'KR'
+        );
         $this->_name = $name;
-        $this->_member_id = $member_id;
-        $this->_photo = $photo;
+        $this->_member_id = $member_id ?? 0;
+    }
+
+    /**
+     * 국가코드를 가져온다.
+     *
+     * @return ?\modules\country\dtos\Country $country_code
+     */
+    public function getCountry(): \modules\country\dtos\Country
+    {
+        /**
+         * @var \modules\country\Country $mCountry
+         */
+        $mCountry = \Modules::get('country');
+        return $mCountry->getCountry(
+            \libphonenumber\PhoneNumberUtil::getInstance()->getRegionCodeForNumber($this->_cellphone)
+        );
     }
 
     /**
@@ -53,9 +74,37 @@ class Cellphone
      *
      * @return string $cellphone
      */
-    public function getCellphone(): string
+    public function getCellphone(bool $is_international = false): string
     {
-        return $this->_cellphone;
+        if ($is_international == false) {
+            return \libphonenumber\PhoneNumberUtil::getInstance()->format(
+                $this->_cellphone,
+                \libphonenumber\PhoneNumberFormat::NATIONAL
+            );
+        } else {
+            return \libphonenumber\PhoneNumberUtil::getInstance()->format(
+                $this->_cellphone,
+                \libphonenumber\PhoneNumberFormat::INTERNATIONAL
+            );
+        }
+    }
+
+    /**
+     * 회원정보를 가져온다.
+     *
+     * @return \modules\member\dtos\Member $member
+     */
+    public function getMember(): \modules\member\dtos\Member
+    {
+        if (isset($this->_member) == false) {
+            /**
+             * @var \modules\member\Member $mMember
+             */
+            $mMember = \Modules::get('member');
+            $this->_member = $mMember->getMember($this->_member_id)->setNicknamePlaceHolder($this->_name);
+        }
+
+        return $this->_member;
     }
 
     /**
@@ -83,20 +132,6 @@ class Cellphone
     }
 
     /**
-     * 회원사진을 가져온다.
-     *
-     * @return string $_photo
-     */
-    public function getPhoto(): string
-    {
-        /**
-         * @var \modules\member\Member $mMember
-         */
-        $mMember = \Modules::get('member');
-        return $mMember->getMemberPhoto($this->_member_id);
-    }
-
-    /**
      * JSON 으로 변환한다.
      *
      * @return object $json
@@ -104,10 +139,9 @@ class Cellphone
     public function getJson(): object
     {
         $address = new \stdClass();
-        $address->cellphone = $this->_cellphone;
-        $address->name = $this->_name;
-        $address->member_id = $this->_member_id;
-        $address->photo = $this->_photo;
+        $address->country = $this->getCountry()?->getJson();
+        $address->cellphone = $this->getCellphone();
+        $address->member = $this->getMember()->getJson();
 
         return $address;
     }
