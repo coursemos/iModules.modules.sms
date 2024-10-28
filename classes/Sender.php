@@ -7,7 +7,7 @@
  * @file /modules/sms/classes/Sender.php
  * @author Arzz <arzz@arzz.com>
  * @license MIT License
- * @modified 2024. 10. 23.
+ * @modified 2024. 10. 28.
  */
 namespace modules\sms;
 class Sender
@@ -23,19 +23,19 @@ class Sender
     private ?\modules\sms\dtos\Cellphone $_to;
 
     /**
-     * @var string $_content 본문내용
-     */
-    private string $_content;
-
-    /**
      * @var ?\modules\sms\dtos\Cellphone $_from 발송자휴대전화번호
      */
     private ?\modules\sms\dtos\Cellphone $_from = null;
 
     /**
-     * @var ?string $_type 발송타입
+     * @var string $_content 본문내용
      */
-    private ?string $_type = null;
+    private string $_content;
+
+    /**
+     * @var string $_type 발송타입
+     */
+    private string $_type = 'SMS';
 
     /**
      * @var mixed $_extras SMS추가데이터
@@ -109,6 +109,15 @@ class Sender
      */
     public function getFrom(): ?\modules\sms\dtos\Cellphone
     {
+        if ($this->_from === null) {
+            /**
+             * @var \modules\sms\Sms $mSms
+             */
+            $mSms = \Modules::get('sms');
+            $mSms->getConfigs('cellphone');
+
+            $this->_from = $mSms->getCellphone($mSms->getConfigs('cellphone'), $mSms->getConfigs('country'));
+        }
         return $this->_from;
     }
 
@@ -225,23 +234,23 @@ class Sender
             $this->setType($type);
         }
 
-        $to = $this->_to;
-        $from = $this->_from;
-
-        $message_id = \UUID::v1($this->_to->getCellphone());
+        $message_id = \UUID::v1($this->getTo()->getCellphone());
         $mSms
             ->db()
             ->insert($mSms->table('messages'), [
                 'message_id' => $message_id,
                 'type' => $type,
-                'member_id' => $to->getMemberId(),
-                'cellphone' => $to->getCellphone(),
-                'name' => $to->getName(),
+                'member_id' => $this->getTo()->getMemberId(),
+                'country' => $this->getTo()
+                    ->getCountry()
+                    ->getCode(),
+                'cellphone' => $this->getTo()->getCellphone(),
+                'name' => $this->getTo()->getName(),
                 'component_type' => $this->_component->getType(),
                 'component_name' => $this->_component->getName(),
                 'content' => $this->getContent(),
                 'extras' => $this->_extras !== null ? \Format::toJson($this->_extras) : null,
-                'sended_cellphone' => $from->getCellphone(),
+                'sended_cellphone' => $this->getFrom()->getCellphone(),
                 'sended_at' => $sended_at,
                 'status' => $success === true ? 'TRUE' : 'FALSE',
                 'response' => is_bool($success) == false ? \Format::toJson($success) : null,
