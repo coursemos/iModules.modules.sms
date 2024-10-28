@@ -7,11 +7,20 @@
  * @file /modules/sms/classes/Event.php
  * @author Arzz <arzz@arzz.com>
  * @license MIT License
- * @modified 2024. 10. 16.
+ * @modified 2024. 10. 28.
  */
 namespace modules\sms;
 class Event extends \Event
 {
+    /**
+     * 전송타입을 가져올 때 발생한다.
+     *
+     * @param string[] $types [타입종류=>타입종류명]
+     */
+    public static function getTypes(array &$types): void
+    {
+    }
+
     /**
      * SMS를 전송할 때 발생한다.
      *
