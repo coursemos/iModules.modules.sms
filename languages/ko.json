@@ -1,5 +1,12 @@
 {
     "admin": {
+        "configs": {
+            "default": "기본설정",
+            "country": "기본국가번호",
+            "country_help": "국가번호가 포함되어 있지 않은 휴대전화번호의 기본국가번호를 설정합니다.",
+            "cellphone": "기본발송번호",
+            "cellphone_help": "발송번호가 지정되어 있지 않는 경우 기본적으로 사용할 발송번호를 설정합니다."
+        },
         "scopes": {
             "context": "SMS관리",
             "message": "메세지관리",
@@ -9,41 +16,26 @@
             "messages": "SMS관리"
         },
         "columns": {
-            "receiver": "수신자",
-            "receiveNumber": "수신번호",
-            "sender": "발신자",
-            "senderNumber": "발신번호",
-            "content": "문자내용",
-            "date": "전송일자",
-            "status": "전송결과",
-            "type": "전송타입"
+            "to": "수신자",
+            "type": "전송타입",
+            "from": "발신번호",
+            "content": "메시지내용",
+            "sended_at": "전송일자",
+            "status": "전송결과"
         },
         "keyword": "수신자/발신자",
-        "filter": {
-            "types": {
-                "SMS": "SMS",
-                "LMS": "LMS",
-                "KAKAO": "알림톡"
-            },
-            "status": {
-                "TRUE": "성공",
-                "FALSE": "실패"
-            }
+        "status": {
+            "TRUE": "성공",
+            "FALSE": "실패"
         },
-        "messages": {
-            "show": {
-                "title": "메세지 상새보기",
-                "sms_info": "문자 내역",
-                "sended_at": "전송시간",
-                "content": "문자내용",
-                "type": "발송타입",
-                "status": "성공여부",
-                "receiver_info": "수신자 기본정보",
-                "receiver": "수신자",
-                "receive_number": "수신번호",
-                "sender": "발신자",
-                "sender_number": "발신번호"
-            }
+        "message": {
+            "title": "메시지 상세보기",
+            "to": "수신자",
+            "sended_at": "전송시간",
+            "content": "메시지내용",
+            "type": "전송타입",
+            "status": "전송결과",
+            "from": "발송번호"
         },
         "buttons": {
             "close": "닫기"

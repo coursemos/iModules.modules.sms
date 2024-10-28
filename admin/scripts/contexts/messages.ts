@@ -4,9 +4,9 @@
  * SMS 관리화면을 구성한다.
  *
  * @file /modules/sms/admin/scripts/contexts/messages.ts
- * @author youlapark <youlapark@naddle.net>
+ * @author Arzz <arzz@arzz.com>
  * @license MIT License
- * @modified 2024. 10. 22.
+ * @modified 2024. 10. 28.
  */
 Admin.ready(async () => {
     const me = Admin.getModule('sms') as modules.sms.admin.Sms;
@@ -38,7 +38,6 @@ Admin.ready(async () => {
             new Aui.Grid.Panel({
                 layout: 'fit',
                 border: false,
-                flex: 1,
                 store: new Aui.Store.Remote({
                     url: me.getProcessUrl('messages'),
                     primaryKeys: ['message_id'],
@@ -58,30 +57,17 @@ Admin.ready(async () => {
                 ]),
                 columns: [
                     {
-                        text: await me.getText('admin.columns.receiver'),
-                        dataIndex: 'sended_by',
-                        textAlign: 'center',
-                        width: 150,
+                        text: await me.getText('admin.columns.to'),
+                        dataIndex: 'to',
+                        width: 280,
                         renderer: (value) => {
                             return me.getMemberName(value);
                         },
                     },
                     {
-                        text: await me.getText('admin.columns.receiveNumber'),
-                        dataIndex: 'cellphone',
-                        textAlign: 'center',
-                        width: 150,
-                    },
-                    {
-                        text: await me.getText('admin.columns.sender'),
-                        dataIndex: 'sender',
-                        width: 150,
-                    },
-                    {
-                        text: await me.getText('admin.columns.senderNumber'),
-                        dataIndex: 'sended_cellphone',
-                        textAlign: 'center',
-                        width: 160,
+                        text: await me.getText('admin.columns.from'),
+                        dataIndex: 'from',
+                        width: 120,
                     },
                     {
                         text: await me.getText('admin.columns.content'),
@@ -90,9 +76,9 @@ Admin.ready(async () => {
                         flex: 1,
                     },
                     {
-                        text: await me.getText('admin.columns.date'),
+                        text: await me.getText('admin.columns.sended_at'),
                         dataIndex: 'sended_at',
-                        width: 250,
+                        width: 170,
                         sortable: true,
                         filter: new Aui.Grid.Filter.Date({ format: 'timestamp' }),
                         renderer: (value) => {
@@ -102,45 +88,44 @@ Admin.ready(async () => {
                     {
                         text: await me.getText('admin.columns.type'),
                         dataIndex: 'type',
-                        width: 120,
+                        width: 100,
                         textAlign: 'center',
                         sortable: true,
                         filter: new Aui.Grid.Filter.List({
-                            store: new Aui.Store.Local({
-                                fields: ['display', 'value'],
-                                records: [
-                                    ['SMS', 'SMS'],
-                                    ['LMS', 'LMS'],
-                                    [await me.getText('admin.filter.types.KAKAO'), 'KAKAO'],
-                                ],
+                            store: new Aui.Store.Remote({
+                                url: me.getProcessUrl('types'),
                             }),
-                            displayField: 'display',
-                            valueField: 'value',
+                            displayField: 'title',
+                            valueField: 'type',
                             multiple: true,
                         }),
-                        renderer: (value) => {
-                            return me.printText('admin.filter.types.' + value);
+                        renderer: (_value, record) => {
+                            return record.get('type_title');
                         },
                     },
                     {
                         text: await me.getText('admin.columns.status'),
-                        sortable: true,
-                        width: 120,
-                        textAlign: 'center',
+                        dataIndex: 'status',
+                        width: 140,
                         filter: new Aui.Grid.Filter.List({
                             dataIndex: 'status',
                             store: new Aui.Store.Local({
                                 fields: ['display', 'value'],
                                 records: [
-                                    [await me.getText('admin.filter.status.TRUE'), 'TRUE'],
-                                    [await me.getText('admin.filter.status.FALSE'), 'FALSE'],
+                                    [await me.getText('admin.status.TRUE'), 'TRUE'],
+                                    [await me.getText('admin.status.FALSE'), 'FALSE'],
                                 ],
                             }),
                         }),
-                        renderer: (_value, record, $dom) => {
-                            const status = record.get('status');
-                            $dom.addClass(status);
-                            return me.printText('admin.filter.status.' + status);
+                        renderer: (value, record, $dom) => {
+                            $dom.addClass(value);
+
+                            if (value == 'TRUE') {
+                                $dom.addClass('center');
+                                return me.printText('admin.status.' + value);
+                            } else {
+                                return record.get('response') ?? me.printText('admin.status.' + value);
+                            }
                         },
                     },
                 ],
