@@ -1,4 +1,6 @@
 {
+    "member": "회원",
+    "guest": "비회원",
     "admin": {
         "configs": {
             "default": "기본설정",
@@ -16,7 +18,8 @@
             "messages": "SMS관리"
         },
         "columns": {
-            "to": "수신자",
+            "member": "수신자",
+            "to": "수신번호",
             "type": "전송타입",
             "from": "발신번호",
             "content": "메시지내용",

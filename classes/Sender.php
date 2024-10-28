@@ -250,7 +250,7 @@ class Sender
                 'component_name' => $this->_component->getName(),
                 'content' => $this->getContent(),
                 'extras' => $this->_extras !== null ? \Format::toJson($this->_extras) : null,
-                'sended_cellphone' => $this->getFrom()->getCellphone(),
+                'sended_cellphone' => $this->getFrom()->getCellphone(true),
                 'sended_at' => $sended_at,
                 'status' => $success === true ? 'TRUE' : 'FALSE',
                 'response' => is_bool($success) == false ? \Format::toJson($success) : null,

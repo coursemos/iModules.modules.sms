@@ -50,7 +50,7 @@
                 "country": {
                     "type": "char",
                     "length": 2,
-                    "comment": "국가코드"
+                    "comment": "수신자국가코드"
                 },
                 "cellphone": {
                     "type": "varchar",
@@ -85,8 +85,7 @@
                 "sended_cellphone": {
                     "type": "varchar",
                     "length": 20,
-                    "is_null": true,
-                    "comment": "발송자휴대전화번호"
+                    "comment": "발송번호"
                 },
                 "sended_at": {
                     "type": "int",

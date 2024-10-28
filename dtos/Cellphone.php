@@ -141,7 +141,6 @@ class Cellphone
         $address = new \stdClass();
         $address->country = $this->getCountry()?->getJson();
         $address->cellphone = $this->getCellphone();
-        $address->member = $this->getMember()->getJson();
 
         return $address;
     }

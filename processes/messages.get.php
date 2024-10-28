@@ -41,6 +41,18 @@ if ($filters !== null) {
         'type' => 'type',
         'sended_at' => 'sended_at',
     ]);
+
+    if (isset($filters->member) == true) {
+        if ($filters->member->value == 'member') {
+            $records->where('member_id', 0, '>');
+        } else {
+            $records->where('member_id', 0);
+        }
+    }
+
+    if (isset($filters->to) == true && count($filters->to->value) > 0) {
+        $records->where('country', $filters->to->value, 'IN');
+    }
 }
 
 if ($keyword !== null) {

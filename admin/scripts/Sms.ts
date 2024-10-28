@@ -73,27 +73,32 @@ namespace modules {
                 /**
                  * 수신자 정보를 가져온다.
                  *
+                 * @param {object} member
+                 */
+                getMemberName(member: { [key: string]: any }): string {
+                    if (member === null) {
+                        return '';
+                    }
+
+                    return '<i class="photo" style="background-image:url(' + member.photo + ')"></i>' + member.name;
+                }
+
+                /**
+                 * 번호를 국기와 함께 가져온다.
+                 *
                  * @param {object} cellphone
                  */
-                getMemberName(cellphone: { [key: string]: any }): string {
+                getCellphone(cellphone: { [key: string]: any }): string {
                     if (cellphone === null) {
                         return '';
                     }
 
-                    let sHTML = '';
-
-                    sHTML +=
-                        '<i class="icon" style="background-image:url(' +
+                    return (
+                        '<i class="icon flag" style="background-image:url(' +
                         cellphone.country.flag +
-                        '); aspect-ratio:1.2;"></i>';
-                    sHTML +=
-                        '<i class="photo" style="background-image:url(' +
-                        cellphone.member.photo +
-                        ')"></i>' +
-                        cellphone.member.name;
-                    sHTML += ' &lt;' + cellphone.cellphone + '&gt;';
-
-                    return sHTML;
+                        ');"></i>' +
+                        cellphone.cellphone
+                    );
                 }
 
                 /**
@@ -116,48 +121,56 @@ namespace modules {
                                     readonly: true,
                                     items: [
                                         new Aui.Form.Field.Container({
-                                            direction: 'column',
+                                            direction: 'row',
                                             items: [
                                                 new Aui.Form.Field.Display({
-                                                    label: await this.getText('admin.columns.to'),
-                                                    name: 'to',
-                                                    value: null,
+                                                    label: await this.getText('admin.columns.member'),
+                                                    name: 'member',
                                                     renderer: (value) => {
                                                         return this.getMemberName(value);
                                                     },
                                                 }),
-                                                new Aui.Form.Field.TextArea({
-                                                    label: await this.getText('admin.message.content'),
-                                                    name: 'content',
-                                                    readonly: true,
-                                                }),
                                                 new Aui.Form.Field.Display({
-                                                    label: await this.getText('admin.message.type'),
-                                                    name: 'type_title',
-                                                }),
-                                                new Aui.Form.Field.Display({
-                                                    label: await this.getText('admin.message.sended_at'),
-                                                    name: 'sended_at',
+                                                    name: 'to',
                                                     renderer: (value) => {
-                                                        return Format.date('Y.m.d(D) H:i:s', value, null, false);
+                                                        return this.getCellphone(value);
                                                     },
-                                                }),
-                                                new Aui.Form.Field.Display({
-                                                    label: await this.getText('admin.message.status'),
-                                                    name: 'status',
-                                                    renderer: (value) => {
-                                                        if (value == 'TRUE' || value == 'FALES') {
-                                                            return this.printText('admin.status.' + value);
-                                                        } else {
-                                                            return value;
-                                                        }
-                                                    },
-                                                }),
-                                                new Aui.Form.Field.Display({
-                                                    label: this.printText('admin.message.from'),
-                                                    name: 'from',
                                                 }),
                                             ],
+                                        }),
+                                        new Aui.Form.Field.TextArea({
+                                            label: await this.getText('admin.message.content'),
+                                            name: 'content',
+                                            readonly: true,
+                                        }),
+                                        new Aui.Form.Field.Display({
+                                            label: await this.getText('admin.message.type'),
+                                            name: 'type_title',
+                                        }),
+                                        new Aui.Form.Field.Display({
+                                            label: await this.getText('admin.message.sended_at'),
+                                            name: 'sended_at',
+                                            renderer: (value) => {
+                                                return Format.date('Y.m.d(D) H:i:s', value, null, false);
+                                            },
+                                        }),
+                                        new Aui.Form.Field.Display({
+                                            label: await this.getText('admin.message.status'),
+                                            name: 'status',
+                                            renderer: (value) => {
+                                                if (value == 'TRUE' || value == 'FALES') {
+                                                    return this.printText('admin.status.' + value);
+                                                } else {
+                                                    return value;
+                                                }
+                                            },
+                                        }),
+                                        new Aui.Form.Field.Display({
+                                            label: this.printText('admin.message.from'),
+                                            name: 'from',
+                                            renderer: (value) => {
+                                                return this.getCellphone(value);
+                                            },
                                         }),
                                     ],
                                 }),

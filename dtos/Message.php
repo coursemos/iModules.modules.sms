@@ -122,7 +122,8 @@ class Message
         $message->type = $this->_type;
         $message->type_title = $mSms->getTypeTitle($this->_type);
         $message->to = $this->_to->getJson();
-        $message->from = $this->_from->getCellphone();
+        $message->member = $this->_to->getMember()->getJson();
+        $message->from = $this->_from->getJson();
         $message->content = $this->_content;
         $message->sended_at = $this->_sended_at;
         $message->status = $this->_status;
