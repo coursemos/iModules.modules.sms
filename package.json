@@ -15,10 +15,20 @@
     "homepage": "https://www.imodules.io",
     "versionChecker": "https://api.moimz.com/download/latest",
     "dependencies": {
-        "core": "4.0.0"
+        "core": "4.0.0",
+        "country": "4.0.0"
     },
     "language": "ko",
     "admin": true,
+    "configs": {
+        "country": {
+            "type": "string",
+            "default": "KR"
+        },
+        "cellphone": {
+            "type": "string"
+        }
+    },
     "databases": {
         "messages": {
             "columns": {
@@ -36,6 +46,11 @@
                 "member_id": {
                     "type": "int",
                     "comment": "수신자회원고유값"
+                },
+                "country": {
+                    "type": "char",
+                    "length": 2,
+                    "comment": "국가코드"
                 },
                 "cellphone": {
                     "type": "varchar",
@@ -98,6 +113,7 @@
             "indexes": {
                 "message_id": "primary_key",
                 "member_id": "index",
+                "country": "index",
                 "cellphone": "index",
                 "response_id": "index"
             },
