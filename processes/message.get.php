@@ -5,9 +5,9 @@
  * SMS 발송기록을 가져온다.
  *
  * @file /modules/sms/processes/message.get.php
- * @author youlapark <youlapark@naddle.net>
+ * @author Arzz <arzz@arzz.com>
  * @license MIT License
- * @modified 2024. 10. 16.
+ * @modified 2024. 10. 28.
  *
  * @var \modules\sms\Sms $me
  */
@@ -24,19 +24,13 @@ if ($me->getAdmin()->checkPermission('messages') == false) {
 }
 
 $message_id = Request::get('message_id', true);
+$message = $me->getMessage($message_id);
 
-$records = $me
-    ->db()
-    ->select()
-    ->from($me->table('messages'))
-    ->where('message_id', $message_id)
-    ->getOne();
-
-if ($records === null) {
+if ($message === null) {
     $results->success = true;
     $results->message = $me->getErrorText('NOT_FOUND_DATA');
     return;
 }
 
 $results->success = true;
-$results->data = $records;
+$results->data = $message->getJson();

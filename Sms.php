@@ -7,16 +7,27 @@
  * @file /modules/sms/Sms.php
  * @author Arzz <arzz@arzz.com>
  * @license MIT License
- * @modified 2024. 10. 13.
+ * @modified 2024. 10. 28.
  */
 namespace modules\sms;
 class Sms extends \Module
 {
     /**
+     * @var \modules\sms\dtos\Message[] $_messages 전송메시지 구조체
+     */
+    private static array $_messages = [];
+
+    /**
+     * @var string[] $_types 전송타입
+     */
+    private static array $_types;
+
+    /**
      * 모듈을 설정을 초기화한다.
      */
     public function init(): void
     {
+        \AutoLoader::register($this->getBase() . '/vendor', '/src');
     }
 
     /**
@@ -68,6 +79,70 @@ class Sms extends \Module
             $member->getDisplayName(false),
             $member->getId()
         );
+    }
+
+    /**
+     * 전송메시지 구조체를 가져온다.
+     *
+     * @param string|object $message_id 전송메시지
+     * @return \modules\sms\dtos\Message $message 전송메시지 구조체
+     */
+    public function getMessage(string|object $message_id): \modules\sms\dtos\Message
+    {
+        if (is_string($message_id) == true) {
+            if (isset(self::$_messages[$message_id]) == true) {
+                return self::$_messages[$message_id];
+            }
+
+            $message = $this->db()
+                ->select()
+                ->from($this->table('messages'))
+                ->where('message_id', $message_id)
+                ->getOne();
+        } else {
+            $message = $message_id;
+            $message_id = $message->message_id;
+        }
+
+        if ($message == null) {
+            self::$_messages[$message_id] = null;
+        } else {
+            self::$_messages[$message_id] = new \modules\sms\dtos\Message($message);
+        }
+
+        return self::$_messages[$message_id];
+    }
+
+    /**
+     * 전송타입을 가져온다.
+     *
+     * @return array $types
+     */
+    public function getTypes(): array
+    {
+        if (isset(self::$_types) == false) {
+            $types = [];
+            $types['SMS'] = 'SMS';
+            $types['LMS'] = 'LMS';
+
+            \Events::fireEvent($this, 'getTypes', [&$types]);
+
+            self::$_types = $types;
+        }
+
+        return self::$_types;
+    }
+
+    /**
+     * 전송타입명을 가져온다.
+     *
+     * @param string $type 타입
+     * @return string $title 타입명
+     */
+    public function getTypeTitle(string $type): string
+    {
+        $types = $this->getTypes();
+        return isset($types[$type]) == true ? $types[$type] : $type;
     }
 
     /**
