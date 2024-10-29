@@ -6,7 +6,7 @@
  * @file /modules/sms/admin/scripts/Sms.ts
  * @author Arzz <arzz@arzz.com>
  * @license MIT License
- * @modified 2024. 10. 28.
+ * @modified 2024. 10. 29.
  */
 var modules;
 (function (modules) {
@@ -31,7 +31,7 @@ var modules;
                                         name: 'country',
                                         store: new Aui.Store.Remote({
                                             url: this.getProcessUrl('countries'),
-                                            fields: ['code', 'country'],
+                                            sorters: { display: 'ASC' },
                                         }),
                                         search: true,
                                         helpText: await this.getText('admin.configs.country_help'),
