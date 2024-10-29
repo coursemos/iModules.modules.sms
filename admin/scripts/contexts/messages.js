@@ -6,7 +6,7 @@
  * @file /modules/sms/admin/scripts/contexts/messages.ts
  * @author Arzz <arzz@arzz.com>
  * @license MIT License
- * @modified 2024. 10. 28.
+ * @modified 2024. 10. 29.
  */
 Admin.ready(async () => {
     const me = Admin.getModule('sms');
@@ -80,8 +80,7 @@ Admin.ready(async () => {
                 filter: new Aui.Grid.Filter.List({
                     store: new Aui.Store.Remote({
                         url: me.getProcessUrl('countries'),
-                        limit: 100,
-                        remoteFilter: true,
+                        sorters: { display: 'ASC' },
                     }),
                     multiple: true,
                     search: true,
