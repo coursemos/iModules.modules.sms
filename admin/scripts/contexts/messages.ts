@@ -6,7 +6,7 @@
  * @file /modules/sms/admin/scripts/contexts/messages.ts
  * @author Arzz <arzz@arzz.com>
  * @license MIT License
- * @modified 2024. 10. 29.
+ * @modified 2024. 10. 30.
  */
 Admin.ready(async () => {
     const me = Admin.getModule('sms') as modules.sms.admin.Sms;
@@ -56,7 +56,7 @@ Admin.ready(async () => {
             {
                 text: await me.getText('admin.columns.member'),
                 dataIndex: 'member',
-                width: 180,
+                width: 160,
                 filter: new Aui.Grid.Filter.List({
                     store: new Aui.Store.Local({
                         fields: ['display', 'value'],
@@ -100,14 +100,6 @@ Admin.ready(async () => {
                 },
             },
             {
-                text: await me.getText('admin.columns.from'),
-                dataIndex: 'from',
-                width: 165,
-                renderer: (value) => {
-                    return me.getCellphone(value);
-                },
-            },
-            {
                 text: await me.getText('admin.columns.content'),
                 dataIndex: 'content',
                 minWidth: 250,
@@ -139,6 +131,14 @@ Admin.ready(async () => {
                 }),
                 renderer: (_value, record) => {
                     return record.get('type_title');
+                },
+            },
+            {
+                text: await me.getText('admin.columns.from'),
+                dataIndex: 'from',
+                width: 165,
+                renderer: (value) => {
+                    return me.getCellphone(value);
                 },
             },
             {
