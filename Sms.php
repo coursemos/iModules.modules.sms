@@ -7,7 +7,7 @@
  * @file /modules/sms/Sms.php
  * @author Arzz <arzz@arzz.com>
  * @license MIT License
- * @modified 2024. 10. 28.
+ * @modified 2024. 10. 30.
  */
 namespace modules\sms;
 class Sms extends \Module
@@ -84,25 +84,20 @@ class Sms extends \Module
     /**
      * 전송메시지 구조체를 가져온다.
      *
-     * @param string|object $message_id 전송메시지
+     * @param string $message_id 메시지고유값
      * @return \modules\sms\dtos\Message $message 전송메시지 구조체
      */
-    public function getMessage(string|object $message_id): \modules\sms\dtos\Message
+    public function getMessage(string $message_id): \modules\sms\dtos\Message
     {
-        if (is_string($message_id) == true) {
-            if (isset(self::$_messages[$message_id]) == true) {
-                return self::$_messages[$message_id];
-            }
-
-            $message = $this->db()
-                ->select()
-                ->from($this->table('messages'))
-                ->where('message_id', $message_id)
-                ->getOne();
-        } else {
-            $message = $message_id;
-            $message_id = $message->message_id;
+        if (isset(self::$_messages[$message_id]) == true) {
+            return self::$_messages[$message_id];
         }
+
+        $message = $this->db()
+            ->select()
+            ->from($this->table('messages'))
+            ->where('message_id', $message_id)
+            ->getOne();
 
         if ($message == null) {
             self::$_messages[$message_id] = null;

@@ -7,7 +7,7 @@
  * @file /modules/sms/dtos/Cellphone.php
  * @author Arzz <arzz@arzz.com>
  * @license MIT License
- * @modified 2024. 10. 28.
+ * @modified 2024. 10. 30.
  */
 namespace modules\sms\dtos;
 class Cellphone
@@ -90,24 +90,6 @@ class Cellphone
     }
 
     /**
-     * 회원정보를 가져온다.
-     *
-     * @return \modules\member\dtos\Member $member
-     */
-    public function getMember(): \modules\member\dtos\Member
-    {
-        if (isset($this->_member) == false) {
-            /**
-             * @var \modules\member\Member $mMember
-             */
-            $mMember = \Modules::get('member');
-            $this->_member = $mMember->getMember($this->_member_id)->setNicknamePlaceHolder($this->_name);
-        }
-
-        return $this->_member;
-    }
-
-    /**
      * 이름을 가져온다.
      *
      * @return ?string $name
@@ -132,6 +114,24 @@ class Cellphone
     }
 
     /**
+     * 회원정보를 가져온다.
+     *
+     * @return \modules\member\dtos\Member $member
+     */
+    public function getMember(): \modules\member\dtos\Member
+    {
+        if (isset($this->_member) == false) {
+            /**
+             * @var \modules\member\Member $mMember
+             */
+            $mMember = \Modules::get('member');
+            $this->_member = $mMember->getMember($this->_member_id)->setNicknamePlaceHolder($this->_name);
+        }
+
+        return $this->_member;
+    }
+
+    /**
      * JSON 으로 변환한다.
      *
      * @return object $json
@@ -141,6 +141,7 @@ class Cellphone
         $address = new \stdClass();
         $address->country = $this->getCountry()?->getJson();
         $address->cellphone = $this->getCellphone();
+        $address->member = $this->getMember()->getJson();
 
         return $address;
     }

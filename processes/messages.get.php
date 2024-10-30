@@ -7,7 +7,7 @@
  * @file /modules/sms/processes/messages.get.php
  * @author Arzz <arzz@arzz.com>
  * @license MIT License
- * @modified 2024. 10. 28.
+ * @modified 2024. 10. 30.
  *
  * @var \modules\sms\Sms $me
  */
@@ -71,7 +71,7 @@ if ($sorters !== null) {
     }
 }
 
-$records = $records->limit($start, $limit)->get();
+$records = $records->limit($start, $limit)->get('message_id');
 foreach ($records as &$record) {
     $record = $me->getMessage($record)->getJson();
 }
