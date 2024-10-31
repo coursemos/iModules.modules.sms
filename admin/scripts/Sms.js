@@ -6,7 +6,7 @@
  * @file /modules/sms/admin/scripts/Sms.ts
  * @author Arzz <arzz@arzz.com>
  * @license MIT License
- * @modified 2024. 10. 29.
+ * @modified 2024. 11. 1.
  */
 var modules;
 (function (modules) {
@@ -98,7 +98,9 @@ var modules;
                  */
                 messages = {
                     /**
-                     * 메세지 상세보기 기능을 가져온다.
+                     * 메세지 상세내용을 확인한다.
+                     *
+                     * @param {string} message_id - 메시지고유값
                      */
                     show: async (message_id) => {
                         new Aui.Window({
