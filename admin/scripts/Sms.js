@@ -4,9 +4,9 @@
  * SMS 이벤트를 관리하는 클래스를 정의한다.
  *
  * @file /modules/sms/admin/scripts/Sms.ts
- * @author Arzz <arzz@arzz.com>
+ * @author sungjin <esung246@naddle.net>
  * @license MIT License
- * @modified 2024. 11. 1.
+ * @modified 2025. 2. 7.
  */
 var modules;
 (function (modules) {
@@ -30,9 +30,11 @@ var modules;
                                         label: await this.getText('admin.configs.country'),
                                         name: 'country',
                                         store: new Aui.Store.Remote({
-                                            url: this.getProcessUrl('countries'),
+                                            url: Admin.getProcessUrl('module', 'country', 'countries'),
                                             sorters: { display: 'ASC' },
                                         }),
+                                        displayField: 'name',
+                                        valueField: 'code',
                                         search: true,
                                         helpText: await this.getText('admin.configs.country_help'),
                                         listRenderer: (display, record) => {
@@ -43,7 +45,7 @@ var modules;
                                                         record.get('flag') +
                                                         ')"></i>';
                                             }
-                                            sHTML += display;
+                                            sHTML += display + '(' + record.get('calling_code') + ')';
                                             return sHTML;
                                         },
                                         renderer: (display, record) => {
@@ -54,7 +56,7 @@ var modules;
                                                         record.get('flag') +
                                                         ')"></i>';
                                             }
-                                            sHTML += display;
+                                            sHTML += display + '(' + record.get('calling_code') + ')';
                                             return sHTML;
                                         },
                                     }),
