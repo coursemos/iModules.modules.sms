@@ -54,7 +54,7 @@
                 },
                 "cellphone": {
                     "type": "varchar",
-                    "length": 20,
+                    "length": 30,
                     "comment": "수신자휴대전화번호"
                 },
                 "name": {
@@ -84,7 +84,7 @@
                 },
                 "sended_cellphone": {
                     "type": "varchar",
-                    "length": 20,
+                    "length": 30,
                     "comment": "발송번호"
                 },
                 "sended_at": {
