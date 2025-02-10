@@ -72,10 +72,13 @@ class Cellphone
     /**
      * 휴대전화번호를 가져온다.
      *
-     * @return string $cellphone
+     * @return ?string $cellphone
      */
-    public function getCellphone(bool $is_international = false): string
+    public function getCellphone(bool $is_international = false): ?string
     {
+        $isValid = \libphonenumber\PhoneNumberUtil::getInstance()->isValidNumber($this->_cellphone);
+        if(!$isValid) return null;
+
         if ($is_international == false) {
             return \libphonenumber\PhoneNumberUtil::getInstance()->format(
                 $this->_cellphone,
