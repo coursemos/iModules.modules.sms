@@ -244,7 +244,7 @@ class Sender
                 'country' => $this->getTo()
                     ->getCountry()
                     ->getCode(),
-                'cellphone' => $this->getTo()->getCellphone(),
+                'cellphone' => $this->getTo()->getCellphone(true),
                 'name' => $this->getTo()->getName(),
                 'component_type' => $this->_component->getType(),
                 'component_name' => $this->_component->getName(),
