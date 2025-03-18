@@ -5,9 +5,9 @@
  * SMS 전송자 클래스를 정의한다.
  *
  * @file /modules/sms/classes/Sender.php
- * @author Arzz <arzz@arzz.com>
+ * @author sungjin <esung246@naddle.net>
  * @license MIT License
- * @modified 2024. 10. 28.
+ * @modified 2025. 3. 18.
  */
 namespace modules\sms;
 class Sender
@@ -190,7 +190,7 @@ class Sender
     /**
      * 응답고유값을 설정한다.
      *
-     * @params string $response_id 응답고유값
+     * @param string $response_id 응답고유값
      * @return \modules\sms\Sender $this
      */
     public function setResponseId(?string $response_id): \modules\sms\Sender
